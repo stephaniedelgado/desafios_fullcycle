@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  webapp:
+    build:
+      context: ./webapp
+    container_name: webapp
+    volumes:
+      - ./webapp:/usr/src/app
+    entrypoint: wait-for mysql:3306 -t 30 -- sh -c "npm install && node index.js"
+    networks:
+      - production
+    depends_on:
+      - mysql
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - '8080:80'
+    networks:
+      - production
+
+  mysql:
+    image: mysql:5.7
+    command: --innodb-use-native-aio=0
+    container_name: mysql
+    restart: always
+    tty: true
+    environment:
+      - MYSQL_DATABASE=db
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - production
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  production:
+    driver: bridge
