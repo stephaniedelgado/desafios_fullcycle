@@ -7,7 +7,7 @@ services:
     container_name: webapp
     volumes:
       - ./webapp:/usr/src/app
-    entrypoint: wait-for mysql:3306 -t 30 -- sh -c "npm install && node index.js"
+    entrypoint: wait-for mysql:3306 -t 30 -- sh -c "npm install && npm start"
     networks:
       - production
     depends_on:
