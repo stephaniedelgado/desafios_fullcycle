@@ -13,4 +13,6 @@ Desenvolver uma aplicação web que se conecta ao banco de dados MySql e utiliza
   cd node
 
   docker-compose up --build -d
+
+  http://localhost:8080/
 ```
