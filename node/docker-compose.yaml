@@ -7,9 +7,9 @@ services:
     container_name: webapp
     volumes:
       - ./webapp:/usr/src/app
-    entrypoint: wait-for mysql:3306 -t 30 -- sh -c "npm install && npm start"
+    entrypoint: wait-for mysql:3306 -t 30 -- sh -c "npm install && node index.js"
     networks:
-      - production
+      - development
     depends_on:
       - mysql
 
@@ -19,8 +19,10 @@ services:
     container_name: nginx
     ports:
       - '8080:80'
+    depends_on:
+      - webapp
     networks:
-      - production
+      - development
 
   mysql:
     image: mysql:5.7
@@ -32,7 +34,7 @@ services:
       - MYSQL_DATABASE=db
       - MYSQL_ROOT_PASSWORD=root
     networks:
-      - production
+      - development
     volumes:
       - db_data:/var/lib/mysql
 
@@ -41,5 +43,5 @@ volumes:
     driver: local
 
 networks:
-  production:
+  development:
     driver: bridge
